@@ -62,8 +62,8 @@ def generate_qstn(img):
 #Edit image frame with question
 def display_question(img, question, timer):
     
-    text = str(question);
-    cv2.rectangle(img, (100, 10), (450, 50), (0, 255, 0), cv2.FILLED);
+    text = "Turn your face " + str(question);
+    cv2.rectangle(img, (100, 10), (470, 50), (0, 255, 0), cv2.FILLED);
     cv2.putText(img,f'Timer: {timer}',(510,35),cv2.FONT_HERSHEY_COMPLEX,0.7,(0, 65, 255),1);
     cv2.putText(img,text,(110,40),cv2.FONT_HERSHEY_COMPLEX,1,(255, 0, 0),2);
     return img;
@@ -109,8 +109,6 @@ def calculate_result(question):
     global final_result_for_all_qstn;
     global buffer_result_for_single_qstn;
     global question_bank;
-    
-    
         
     if buffer_result_for_single_qstn.count(question):
         false_value_count = 0

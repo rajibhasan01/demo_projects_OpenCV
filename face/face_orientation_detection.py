@@ -10,8 +10,8 @@ detector = fm.FaceMeshDetector(max_num_faces=1);
 while True:
     success, img = cap.read();
     img = cv2.flip(img,1);
-    img = detector.findFaceMesh(img);
-    img, face_orientation = detector.find_Orientation(img);
+    img = detector.findFaceMesh(img, False);
+    img, face_orientation = detector.find_Orientation(img, False);
     # print(face_orientation)
     # if len(face)!= 0:
     #     # print(face[0]);
