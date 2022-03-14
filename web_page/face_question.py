@@ -88,12 +88,12 @@ def display_question(img, question, timer):
 # Edit image frame with result
 def display_result(img):
     global status;
-    if status == "Verified":
+    if status == "Real":
         bg = (106, 176, 76);
-        txt_position = (240,40)
+        txt_position = (260,40)
     else:
         bg = (0, 0, 205);
-        txt_position = (220,40);
+        txt_position = (260,40);
     cv2.rectangle(img, (170, 10), (440, 50), bg, cv2.FILLED);
     cv2.putText(img, status,txt_position,cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2);
     return img;
@@ -161,8 +161,8 @@ def make_decision(final_result_for_all_qstn):
     rignt_ans_count = final_result_for_all_qstn.count(1);
     
     if(rignt_ans_count >= 3):
-        status = "Verified"
+        status = "Real"
         print("Passed")
     else:
-        status = "Unverified"
+        status = "Fake"
         print("failed")

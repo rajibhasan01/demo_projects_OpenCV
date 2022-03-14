@@ -1,8 +1,11 @@
 import cv2
 from flask import Flask, render_template, render_template_string, Response
 
+import mediapipe as mp;
+import time;
 import FaceMeshModule as fm;
 import face_question as fq;
+import os;
 
 
 
@@ -19,7 +22,7 @@ def gen():
         image, face_orientation = detector.find_Orientation(image, False);
     
         # Generating new question
-        fq.generate_qstn(image);
+        new_question = fq.generate_qstn(image);
     
          # Matching buffer ans with current question
         fq.match_q_a(face_orientation);
