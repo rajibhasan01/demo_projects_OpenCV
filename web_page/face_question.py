@@ -11,15 +11,27 @@ question_bank = [
     "open"             
                  ];
 
-count_for_call = 0;
-prev_status = None;
-countdown = 0;
-status = None;
-counter_start = time.time();
-question_index = random.randint(0,4);
-question = question_bank[question_index];
-final_result_for_all_qstn = [];
-buffer_result_for_single_qstn = [];
+# Generate global status 
+def generate_status():
+    global status;
+    global counter_start;
+    global count_for_call;
+    global countdown;
+    global question_index;
+    global question;
+    global final_result_for_all_qstn;
+    global buffer_result_for_single_qstn;
+    counter_start = time.time();
+    status = None;
+    count_for_call = 0;
+    countdown = 0;
+    question_index = random.randint(0,4);
+    question = question_bank[question_index];
+    final_result_for_all_qstn = [];
+    buffer_result_for_single_qstn = [];
+    
+    final_result_for_all_qstn.clear();
+    buffer_result_for_single_qstn.clear();
 
 # Generating new question
 def generate_qstn(img, value=False):
@@ -29,15 +41,15 @@ def generate_qstn(img, value=False):
     global counter_start;
     global status;
     global count_for_call;
-    if value == True and count_for_call%2 == 0:
-        count_for_call += 1;
-        print(count_for_call)
-        status = None;
+    # if value == True and count_for_call%2 == 0:
+    #     count_for_call += 1;
+    #     print(count_for_call)
+    #     status = None;
         
     current_time = time.time();
     time_counter = generate_timer(current_time);
     
-    if counter_start + 3 < current_time:
+    if counter_start + 3.5 < current_time and status == None:
         
         # calculate previous question answer
         if status == None:
@@ -70,8 +82,11 @@ def generate_qstn(img, value=False):
 #Edit image frame with question
 def display_question(img, question, timer):
     
-    text = "Turn your face " + str(question);
-    cv2.rectangle(img, (100, 10), (470, 50), (0, 255, 0), cv2.FILLED);
+    if question == 'open':
+        text = "Open Your Mouth";
+    else:
+        text = "Turn Your Face " + str(question);
+    cv2.rectangle(img, (100, 10), (480, 50), (0, 255, 0), cv2.FILLED);
     cv2.putText(img,f'Timer: {timer}',(510,35),cv2.FONT_HERSHEY_COMPLEX,0.7,(0, 65, 255),1);
     cv2.putText(img,text,(110,40),cv2.FONT_HERSHEY_COMPLEX,1,(255, 0, 0),2);
     return img;

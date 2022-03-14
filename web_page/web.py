@@ -14,6 +14,7 @@ video_capture = cv2.VideoCapture(0)
 detector = fm.FaceMeshDetector(max_num_faces=1);
 
 def gen(): 
+    fq.generate_status();
     while True:
         ret, image = video_capture.read()
         image = cv2.flip(image,1);
@@ -36,6 +37,8 @@ def gen():
 
 
 def gen_rerun(value): 
+    
+    fq.generate_status();
     while True:
         ret, image = video_capture.read()
         image = cv2.flip(image,1);
@@ -96,7 +99,7 @@ def index():
 <body>
     
     <div class="container">
-    <a href="/your_flask_funtion"><input type="button" value="rerun"></a>
+    <a href="/"><input type="button" value="rerun"></a>
         <h1>Liveliness Checking</h1>
         <canvas id="canvas" width="640px" height="480px"></canvas>
     </div>
@@ -130,12 +133,6 @@ def video_feed():
     return Response(gen(),
                 mimetype='multipart/x-mixed-replace; boundary=frame')
     
-
-@app.route('/video_feed_rerun')
-def video_feed_rerun():
-    """Video streaming route. Put this in the src attribute of an img tag."""
-    return Response(gen_rerun(True),
-                mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/your_flask_funtion')
 def rerun():
