@@ -6,9 +6,7 @@ import time
 question_bank = [
     "right",
     "left",
-    "up",
-    "down",
-    "open"             
+    "up"            
                  ];
 
 # Generate global status 
@@ -25,7 +23,7 @@ def generate_status():
     status = None;
     count_for_call = 0;
     countdown = 0;
-    question_index = random.randint(0,4);
+    question_index = random.randint(0,2);
     question = question_bank[question_index];
     final_result_for_all_qstn = [];
     buffer_result_for_single_qstn = [];
@@ -52,7 +50,7 @@ def generate_qstn(img):
             # print("prev_qstn", question)
             calculate_result(question);
         
-        new_question_index = random.randint(0,4);
+        new_question_index = random.randint(0,2);
         if question_index == new_question_index:
             if question_index == 0:
                 new_question_index = question_index + 1;
