@@ -1,13 +1,15 @@
+from turtle import distance
 import cv2;
 import mediapipe as mp;
 import time;
-
+import numpy as np
 
 count = 0;
-face_orientation = 'front'
+constant_value = 30;
+face_orientation = 'front';
+distance = None;
 
-class FaceMeshDetector():
-
+class FaceMeshDetector(): 
     def __init__(self,
                static_image_mode=False,
                max_num_faces=1,
@@ -27,7 +29,10 @@ class FaceMeshDetector():
                                                  self.minDetectionCon, self.minTrackCon);
         self.drawSpec = self.mpDraw.DrawingSpec(thickness=1, circle_radius=2);
 
-    def findFaceMesh(self, img, draw=True):
+    def findFace(self, img, draw=True):
+        global constant_value;
+        global distance;
+        
         self.imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB);
         self.results = self.faceMesh.process(self.imgRGB);
         faces = [];
@@ -41,11 +46,50 @@ class FaceMeshDetector():
                     #print(lm)
                     ih, iw, ic = img.shape;
                     x,y = int(lm.x*iw), int(lm.y*ih);
-                    # if id == 1 or id == 93 or id == 323 or id == 175:
-                    #   cv2.putText(img, str(id), (x, y), cv2.FONT_HERSHEY_PLAIN,
-                    #             0.7, (0, 255, 0), 1);
+                    
+                    if id == 93:
+                      x1 = x - constant_value;
+                    if id == 10:
+                      y1 = y - constant_value + 10;
+                    
+                    if id == 152:
+                      y2 = y + constant_value -10;
+                    if id == 454:
+                      x2 = x + constant_value;
+                      
+                      img = cv2.rectangle(img, (x1 , y1 ), (x2 ,y2 ), (0,0,255), 2);
+                      
+                      # check face distance from camera
+                      distance = check_face_distance(x1,y1, x2, y2)
+                      
+                      # cv2.putText(img, str("."), (x, y), cv2.FONT_HERSHEY_PLAIN,
+                      #           1, (0, 0, 255), 5);
+                      
+                      # print("id-93 x_axis ", x);
+                    # img = np.ones_like(img) * 255
+                    img = cv2.rectangle(img, (150,80), (490,400), (0,255,0), 2);
+                    
+                    
+                    # img = cv2.GaussianBlur(img,(3,3),0);    
 
-        return img
+        return img, distance;
+      
+    
+    def findFaceMesh(self, img, draw=True):
+        global constant_value;
+        global distance;
+        
+        self.imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB);
+        self.results = self.faceMesh.process(self.imgRGB);
+        faces = [];
+        if self.results.multi_face_landmarks:
+            for faceLms in self.results.multi_face_landmarks:
+                if draw:
+                    self.mpDraw.draw_landmarks(img, faceLms, self.mpFaceMesh.FACEMESH_CONTOURS,
+                                           self.drawSpec, self.drawSpec);
+
+        return img;
+    
       
     def find_Orientation(self, img):
       
@@ -66,11 +110,32 @@ class FaceMeshDetector():
               
             else:
               face_orientation = "font"
-              
+            
             
       return img, face_orientation;
               
 
+
+# checking face distance
+def check_face_distance(x1,y1, x2, y2):
+  global face_distance;
+
+  if x1 < 150 or y1 < 80 or x2 > 490 or y2 > 400:
+    face_distance = 'zoom';
+    
+  else:
+    if x1 - 150 > 100 or y1 - 80 > 80:
+      face_distance = 'long';
+    
+    elif 490 - x2 > 100 or 400 - y2 > 80:
+      face_distance = 'long';
+      
+    else:
+      face_distance = 'ok';
+      
+  
+  return face_distance;
+      
 
 def main():
     cap = cv2.VideoCapture(0);
