@@ -11,10 +11,7 @@ while True:
     success, img = cap.read();
     img = cv2.flip(img,1);
     img = detector.findFaceMesh(img, False);
-    img, face_orientation = detector.find_Orientation(img, False);
-    # print(face_orientation)
-    # if len(face)!= 0:
-    #     # print(face[0]);
+    img, face_orientation = detector.find_Orientation(img);
     
     # Generating new question
     new_question = fq.generate_qstn(img);

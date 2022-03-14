@@ -36,64 +36,37 @@ class FaceMeshDetector():
                 if draw:
                     self.mpDraw.draw_landmarks(img, faceLms, self.mpFaceMesh.FACEMESH_CONTOURS,
                                            self.drawSpec, self.drawSpec);
-                # face = []
+
                 for id,lm in enumerate(faceLms.landmark):
                     #print(lm)
                     ih, iw, ic = img.shape;
                     x,y = int(lm.x*iw), int(lm.y*ih);
-                    # cv2.putText(img, str(id), (x, y), cv2.FONT_HERSHEY_PLAIN,
-                    #            0.7, (0, 255, 0), 1);
+                    # if id == 1 or id == 93 or id == 323 or id == 175:
+                    #   cv2.putText(img, str(id), (x, y), cv2.FONT_HERSHEY_PLAIN,
+                    #             0.7, (0, 255, 0), 1);
 
-                    
-                    # face.append([x,y])
-                # faces.append(face)
         return img
       
-    def find_Orientation(self, img, draw=True):
+    def find_Orientation(self, img):
       
       global count;
       global face_orientation;
 
       if self.results.multi_face_landmarks:
           for faceLms in self.results.multi_face_landmarks:
-            # print('right',faceLms.landmark[323].x)
-            # print('middle',faceLms.landmark[1].x)
-            # print('left', faceLms.landmark[93].x)
             
             if faceLms.landmark[1].x >= faceLms.landmark[323].x:
-              count += 1;
               face_orientation = "right";
-              # print("Right ", count);
-              
+
             elif faceLms.landmark[1].x <= faceLms.landmark[93].x:
-              count += 1;
               face_orientation = "left";
-              # print("Left ", count);
-            
-            elif faceLms.landmark[175].y >= faceLms.landmark[152].y:
-              count += 1;
-              face_orientation = "down";
-              # print("Down ", count);
-            
+
             elif faceLms.landmark[134].y <= faceLms.landmark[127].y:
-              count += 1;
               face_orientation = "up";
-              # print("Up ", count);
-            
-            elif faceLms.landmark[14].y - faceLms.landmark[13].y >= 0.015:
-              count += 1;
-              face_orientation = "open";
-              # print("Open ", count);
-            
+              
             else:
               face_orientation = "font"
               
-            
-              
-              
-              
-            # print('open', faceLms.landmark[159].y)
-            # print('close', faceLms.landmark[145].y)
             
       return img, face_orientation;
               
@@ -106,10 +79,7 @@ def main():
     
     while True:
         success, img = cap.read();
-        # img = cv2.flip(img,1)
         img, face = detector.findFaceMesh(img);
-        # if len(face)!= 0:
-        #     # print(face[0])
         cTime = time.time();
         fps = 1 / (cTime - pTime);
         pTime = cTime;

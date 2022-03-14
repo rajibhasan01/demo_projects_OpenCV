@@ -1,16 +1,12 @@
-import cv2
-from flask import Flask, render_template, render_template_string, Response
+import cv2;
+from flask import Flask, render_template_string, Response;
 
-import mediapipe as mp;
-import time;
 import FaceMeshModule as fm;
 import face_question as fq;
-import os;
 
 
-
-app = Flask(__name__)
-video_capture = cv2.VideoCapture(0)
+app = Flask(__name__);
+video_capture = cv2.VideoCapture(0);
 detector = fm.FaceMeshDetector(max_num_faces=1);
 
 def gen(): 
@@ -18,8 +14,8 @@ def gen():
     while True:
         ret, image = video_capture.read()
         image = cv2.flip(image,1);
-        image = detector.findFaceMesh(image, False);
-        image, face_orientation = detector.find_Orientation(image, False);
+        image = detector.findFaceMesh(image, True);
+        image, face_orientation = detector.find_Orientation(image);
     
         # Generating new question
         new_question = fq.generate_qstn(image);
@@ -27,10 +23,10 @@ def gen():
          # Matching buffer ans with current question
         fq.match_q_a(face_orientation);
     
-        cv2.imwrite('t.jpg', image)
+        cv2.imwrite('t.jpg', image);
         yield (b'--frame\r\n'
-           b'Content-Type: image/jpeg\r\n\r\n' + open('t.jpg', 'rb').read() + b'\r\n')
-    video_capture.release()
+           b'Content-Type: image/jpeg\r\n\r\n' + open('t.jpg', 'rb').read() + b'\r\n');
+    video_capture.release();
 
 
 @app.route('/')
@@ -87,7 +83,7 @@ def index():
 def video_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(gen(),
-                mimetype='multipart/x-mixed-replace; boundary=frame')
+                mimetype='multipart/x-mixed-replace; boundary=frame');
     
 
 @app.route('/your_flask_funtion')
@@ -158,4 +154,4 @@ def rerun():
     
 
 if __name__ == '__main__':
-    app.run()
+    app.run();
