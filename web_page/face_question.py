@@ -34,17 +34,13 @@ def generate_status():
     buffer_result_for_single_qstn.clear();
 
 # Generating new question
-def generate_qstn(img, value=False):
+def generate_qstn(img):
     global question_index;
     global countdown;
     global question;
     global counter_start;
     global status;
     global count_for_call;
-    # if value == True and count_for_call%2 == 0:
-    #     count_for_call += 1;
-    #     print(count_for_call)
-    #     status = None;
         
     current_time = time.time();
     time_counter = generate_timer(current_time);

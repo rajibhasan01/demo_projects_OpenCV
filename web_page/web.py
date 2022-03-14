@@ -20,9 +20,6 @@ def gen():
         image = cv2.flip(image,1);
         image = detector.findFaceMesh(image, False);
         image, face_orientation = detector.find_Orientation(image, False);
-        # print(face_orientation)
-        # if len(face)!= 0:
-        #     # print(face[0]);
     
         # Generating new question
         new_question = fq.generate_qstn(image);
@@ -35,29 +32,6 @@ def gen():
            b'Content-Type: image/jpeg\r\n\r\n' + open('t.jpg', 'rb').read() + b'\r\n')
     video_capture.release()
 
-
-def gen_rerun(value): 
-    
-    fq.generate_status();
-    while True:
-        ret, image = video_capture.read()
-        image = cv2.flip(image,1);
-        image = detector.findFaceMesh(image, False);
-        image, face_orientation = detector.find_Orientation(image, False);
-        # print(face_orientation)
-        # if len(face)!= 0:
-        #     # print(face[0]);
-    
-        # Generating new question
-        new_question = fq.generate_qstn(image, value);
-    
-         # Matching buffer ans with current question
-        fq.match_q_a(face_orientation);
-    
-        cv2.imwrite('t.jpg', image)
-        yield (b'--frame\r\n'
-           b'Content-Type: image/jpeg\r\n\r\n' + open('t.jpg', 'rb').read() + b'\r\n')
-    video_capture.release()
 
 @app.route('/')
 def index():
@@ -99,31 +73,14 @@ def index():
 <body>
     
     <div class="container">
-    <a href="/"><input type="button" value="rerun"></a>
-        <h1>Liveliness Checking</h1>
-        <canvas id="canvas" width="640px" height="480px"></canvas>
+    <a href="/your_flask_funtion"><input type="button" value="Start"></a>
+        <h1>Check liveliness by clicking the start button</h1>
+        
+        <img src="https://shuftipro.com/wp-content/uploads/2019/07/Liveness-Detection.jpg" alt="W3Schools.com">
+
     </div>
 
-<script >
 
-    
-    var ctx = document.getElementById("canvas").getContext('2d');
-    
-    var img = new Image();
-    img.src = "{{ url_for('video_feed') }}";
-
-    // need only for static image
-    //img.onload = function(){   
-    //    ctx.drawImage(img, 0, 0);
-    //};
-
-    // need only for animated image
-    function refreshCanvas(){
-        ctx.drawImage(img, 0, 0);
-    };
-    window.setInterval("refreshCanvas()", 10);
-
-</script>
 </body>
 </html>''')
 
@@ -184,7 +141,7 @@ def rerun():
     var ctx = document.getElementById("canvas").getContext('2d');
     
     var img = new Image();
-    img.src = "{{ url_for('video_feed_rerun') }}";
+    img.src = "{{ url_for('video_feed') }}";
 
     // need only for static image
     //img.onload = function(){   
